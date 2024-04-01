@@ -1,0 +1,48 @@
+{% extends "base.html" %} {% block content %}
+<form action="{{ url_for('index') }}" method="POST">
+    <div class="form-group">
+        <label for="text">Данные</label>
+        <input type="text" class="form-control" id="text" placeholder="Поместите сюда свои данные" name="text"
+            value="{{ request.form.get('text', '') }}" required>
+    </div>
+
+    <div class="form-check">
+        <label class="form-check-label">
+            <input type="checkbox" class="form-check-input" name="make_proof">
+            с POW
+        </label>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary btn-lg btn-block">Записать</button>
+</form>
+<br>
+<hr> {% endblock %} {% block check %}
+<form action="{{ url_for('integrity') }}" method="POST">
+    <button type="submit" class="btn btn-primary btn-lg btn-block">Проверка целостности</button>
+</form>
+<hr>
+<ul class="list-group">
+    {% for result in results %}
+    <li class="list-group-item"> Block {{result['block'] }} : {% if result['result'] == 'ok' %}
+        <i>Okey!</i> {% endif %} {% if result['result'] == 'error' %}
+        <strong> поврежденный!</strong> {% endif %} {% if result['proof'] != -1 %}
+        <i>it is mined!</i> {% endif %} {% if result['proof'] == -1 %}
+        <strong>it is not mined!</strong> {% endif %}
+
+    </li>
+    {% endfor %}
+</ul>
+<br> {% endblock %}
+<hr> {% block mining %}
+<form action="{{ url_for('mining') }}" method="POST">
+    <button type="submit" class="btn btn-primary btn-lg btn-block">Mine</button>
+</form>
+{% if querry %}
+<hr>
+<div class="alert alert-success" role="alert">
+    <strong>Отличная работа!</strong> Вы успешно записали!
+</div>
+<hr><br> {% endif %}
+
+
+<br><br><br> {% endblock %}
